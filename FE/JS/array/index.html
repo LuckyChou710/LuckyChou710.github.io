@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"luckychou.gitee.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一些数组常用方法的实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 数组常用方法以及数组排序&#x2F;逆序&#x2F;去重&#x2F;乱序&#x2F;扁平化">
+<meta property="og:url" content="https://luckychou.gitee.io/FE/JS/array/index.html">
+<meta property="og:site_name" content="LuckyChou-Blog">
+<meta property="og:description" content="一些数组常用方法的实现">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/LuckyChou/blog-images/raw/master/js/data-type/array.png">
+<meta property="article:published_time" content="2020-10-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-03-15T12:57:48.557Z">
+<meta property="article:author" content="LuckyChou">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/LuckyChou/blog-images/raw/master/js/data-type/array.png">
+
+<link rel="canonical" href="https://luckychou.gitee.io/FE/JS/array/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>JavaScript 数组常用方法以及数组排序/逆序/去重/乱序/扁平化 | LuckyChou-Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?05591f538b19130e7772874e98b9c8bc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="LuckyChou-Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LuckyChou-Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/LuckyChou710" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://luckychou.gitee.io/FE/JS/array/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/LuckyChou/blog-images/raw/master/bg-images/home.gif">
+      <meta itemprop="name" content="LuckyChou">
+      <meta itemprop="description" content="走过清澈的往日，一如扑水的少年">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckyChou-Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript 数组常用方法以及数组排序/逆序/去重/乱序/扁平化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-21 00:00:00" itemprop="dateCreated datePublished" datetime="2020-10-21T00:00:00+08:00">2020-10-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-15 20:57:48" itemprop="dateModified" datetime="2021-03-15T20:57:48+08:00">2021-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">JS篇</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/FE/JS/array/" class="post-meta-item leancloud_visitors" data-flag-title="JavaScript 数组常用方法以及数组排序/逆序/去重/乱序/扁平化" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/FE/JS/array/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/FE/JS/array/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>6.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>6 mins.</span>
+            </span>
+            <div class="post-description">一些数组常用方法的实现</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我们知道数组的本质是一个对象 假设我们有以下数组 来获取它的键名试试</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.keys(arr))</span><br><span class="line"></span><br><span class="line"><span class="comment">//[ &#x27;0&#x27;, &#x27;1&#x27;, &#x27;2&#x27;, &#x27;3&#x27; ]</span></span><br></pre></td></tr></table></figure>
+
+<p>获取到数组的 key 为 [ ‘0’, ‘1’, ‘2’, ‘3’ ]</p>
+<a id="more"></a>
+
+<p>所以我们可以用 arr[0]来获取数组中的元素</p>
+<p>本质上是 Object[key]的形式获取了 value</p>
+<p>而 arr[0]会被转换成 arr[‘0’] 因为对象的键名都是string类型</p>
+<h2 id="length-属性"><a href="#length-属性" class="headerlink" title="length 属性"></a>length 属性</h2><p>我们思考一个问题 arr.length得到的一定是数组的实际长度吗</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>]</span><br><span class="line"><span class="built_in">console</span>.log(arr.length) <span class="comment">//4</span></span><br><span class="line">arr[<span class="number">100</span>] = <span class="string">&#x27;z&#x27;</span></span><br><span class="line"><span class="built_in">console</span>.log(arr.length) <span class="comment">//101</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>length 属性永远比 key 最大值 大一个</strong></p>
+<p>注意 因为数组本质上是一个对象 所以我们可以进行如下赋值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>];</span><br><span class="line">arr[<span class="string">&#x27;a&#x27;</span>] = <span class="string">&#x27;6&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(arr) <span class="comment">// [ 1, 2, 3, a: 6 ]</span></span><br></pre></td></tr></table></figure>
+
+<p>上述操作会增加一个元素 a</p>
+<p>但是数组 length 依然为 5 因为 length = Max（key） + 1</p>
+<h2 id="in"><a href="#in" class="headerlink" title="in"></a>in</h2><p>也适用于数组 因为它是对象</p>
+<h3 id="for……in"><a href="#for……in" class="headerlink" title="for……in"></a>for……in</h3><p>循环遍历数组</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> arr) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(arr[i])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意 for……in 循环遍历 会获取所有 key 包括非数字 key</p>
+<h2 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h2><p>注意</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">delete</span> arr[<span class="number">0</span>]</span><br><span class="line"><span class="built_in">console</span>.log(arr[<span class="number">0</span>]) <span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(arr.length) <span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+
+<p>delete 不会影响数组的长度 只是删除了数组对应 key 的 value 变成 undefined</p>
+<p>但是遍历的时候会跳过这个空位 不会产生任何输出</p>
+<h2 id="伪数组"><a href="#伪数组" class="headerlink" title="伪数组"></a>伪数组</h2><p>伪数组不具备任何数组的方法 如果调用会报错</p>
+<p>常见的伪数组有</p>
+<ul>
+<li><p>函数内部的arguments</p>
+</li>
+<li><p>通过选择器获取到的nodeList</p>
+</li>
+</ul>
+<p>但是伪数组有 length 属性</p>
+<p>将伪数组转换为真正的数组有如下方法</p>
+<p><code>Array.prototype.slice.call ( arrayLike )</code></p>
+<p><code>Array.from ( arrayLike )</code> </p>
+<h2 id="数组API"><a href="#数组API" class="headerlink" title="数组API"></a>数组API</h2><h3 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h3><h4 id="Array-from-arrayLike-mapFn-thisArg"><a href="#Array-from-arrayLike-mapFn-thisArg" class="headerlink" title="Array.from(arrayLike[, mapFn[, thisArg]])"></a>Array.from(arrayLike[, mapFn[, thisArg]])</h4><p>方法从一个类似数组或可迭代对象创建一个新的，浅拷贝的数组实例</p>
+<ul>
+<li><p>arrayLike</p>
+<ul>
+<li>想要转换成数组的伪数组对象或可迭代对象。</li>
+</ul>
+</li>
+<li><p>mapFn 可选</p>
+<ul>
+<li>如果指定了该参数，新数组中的每个元素会执行该回调函数。</li>
+</ul>
+</li>
+<li><p>thisArg 可选</p>
+<ul>
+<li>可选参数，执行回调函数 mapFn 时 this 对象。</li>
+</ul>
+</li>
+</ul>
+<p>功能：将类数组变成真正的数组 快速生成有序数组</p>
+<p>例如 快速生成一个1-10的数组</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.from(<span class="built_in">Array</span>(<span class="number">10</span>), <span class="function">(<span class="params">val, index</span>) =&gt;</span> index + <span class="number">1</span>); <span class="comment">// [1,2....,10]</span></span><br></pre></td></tr></table></figure>
+
+<p>因为伪数组也有length属性 所以我们也可以改写成如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.from(&#123; <span class="attr">length</span>: <span class="number">10</span> &#125;, <span class="function">(<span class="params">val, index</span>) =&gt;</span> index + <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Array-isArray"><a href="#Array-isArray" class="headerlink" title="Array.isArray()"></a>Array.isArray()</h4><h4 id="Array-of-element0-element1-…-elementN"><a href="#Array-of-element0-element1-…-elementN" class="headerlink" title="Array.of(element0[, element1[, …[, elementN]]])"></a>Array.of(element0[, element1[, …[, elementN]]])</h4><p>返回值: 一个新的数组实例</p>
+<h3 id="成员方法"><a href="#成员方法" class="headerlink" title="成员方法"></a>成员方法</h3><h4 id="arr-concat"><a href="#arr-concat" class="headerlink" title="arr.concat()"></a>arr.concat()</h4><p>功能: 合并数组 也可用于浅拷贝</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 浅拷贝 只拷贝最外层</span></span><br><span class="line"><span class="keyword">const</span> NewArray = orgArray.concat()</span><br></pre></td></tr></table></figure>
+
+<h4 id="arr-every-callback-element-index-array-thisArg"><a href="#arr-every-callback-element-index-array-thisArg" class="headerlink" title="arr.every(callback(element[, index[, array]])[, thisArg])"></a>arr.every(callback(element[, index[, array]])[, thisArg])</h4><ul>
+<li><p>callback</p>
+<p>  用来测试每个元素的函数，它可以接收三个参数：</p>
+<ul>
+<li><p>element</p>
+<p>用于测试的当前值。</p>
+</li>
+<li><p>index可选</p>
+<p>用于测试的当前值的索引。</p>
+</li>
+<li><p>array可选</p>
+<p>调用 every 的当前数组。 </p>
+</li>
+</ul>
+</li>
+</ul>
+<p>返回值: 如果回调函数的每一次返回都为 truthy 值，返回 true ，否则返回 false。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>].every(<span class="function"><span class="params">x</span> =&gt;</span> x &gt; <span class="number">0</span>) <span class="comment">// true</span></span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>].every(<span class="function"><span class="params">x</span> =&gt;</span> x &gt; <span class="number">1</span>) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="arr-some"><a href="#arr-some" class="headerlink" title="arr.some()"></a>arr.some()</h4><p>同every</p>
+<p>返回值: 有一个通过就返回true</p>
+<h4 id="arr-fill"><a href="#arr-fill" class="headerlink" title="arr.fill()"></a>arr.fill()</h4><p>参数: arr.fill(value[, start[, end]])</p>
+<ul>
+<li><p>value</p>
+<p>用来填充数组元素的值。</p>
+</li>
+<li><p>start 可选</p>
+<p>起始索引，默认值为0。</p>
+</li>
+<li><p>end 可选</p>
+<p>终止索引，默认值为 this.length。</p>
+</li>
+</ul>
+<p>返回值: 修改后的数组</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 可用于初始化数组</span></span><br><span class="line"><span class="built_in">Array</span>(<span class="number">3</span>).fill(<span class="number">0</span>);   <span class="comment">// [0, 0, 0]</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="arr-filter-callback-element-index-array-thisArg"><a href="#arr-filter-callback-element-index-array-thisArg" class="headerlink" title="arr.filter(callback(element[, index[, array]])[, thisArg])"></a>arr.filter(callback(element[, index[, array]])[, thisArg])</h4><p>返回值: 一个新的、由通过测试的元素组成的数组，如果没有任何数组元素通过测试，则返回空数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>].filter(<span class="function"><span class="params">x</span> =&gt;</span> x &gt; <span class="number">1</span>) <span class="comment">// [2, 3, 4, 5]</span></span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>].filter(<span class="function"><span class="params">x</span> =&gt;</span> x &gt; <span class="number">6</span>) <span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="arr-find-callback-thisArg"><a href="#arr-find-callback-thisArg" class="headerlink" title="arr.find(callback[, thisArg])"></a>arr.find(callback[, thisArg])</h4><p>返回值: 数组中<strong>第一个</strong>满足所提供测试函数的元素的值，否则返回 undefined。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>].find(<span class="function"><span class="params">x</span> =&gt;</span> x &gt; <span class="number">6</span>) <span class="comment">//undefined</span></span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>].find(<span class="function"><span class="params">x</span> =&gt;</span> x &gt; <span class="number">2</span>) <span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="arr-findIndex"><a href="#arr-findIndex" class="headerlink" title="arr.findIndex()"></a>arr.findIndex()</h4><p>同find 区别在于返回值</p>
+<p>数组中通过提供测试函数的<strong>第一个</strong>元素的索引。否则，返回-1。</p>
+<h4 id="arr-flat-depth"><a href="#arr-flat-depth" class="headerlink" title="arr.flat([depth])"></a>arr.flat([depth])</h4><ul>
+<li>depth: 深度 默认为1</li>
+</ul>
+<p>将数组扁平化</p>
+<p>返回值: 一个新的数组实例。</p>
+<h4 id="arr-flatMap"><a href="#arr-flatMap" class="headerlink" title="arr.flatMap()"></a>arr.flatMap()</h4><p>flatMap() = map() + flat(1)</p>
+<h4 id="arr-forEach-callback-currentValue-index-array-thisArg"><a href="#arr-forEach-callback-currentValue-index-array-thisArg" class="headerlink" title="arr.forEach(callback(currentValue [, index [, array]])[, thisArg])"></a>arr.forEach(callback(currentValue [, index [, array]])[, thisArg])</h4><p>返回值: 没有返回值 undefined</p>
+<h4 id="arr-map"><a href="#arr-map" class="headerlink" title="arr.map()"></a>arr.map()</h4><p>效果同forEach() 区别在于map()有返回值</p>
+<p>返回值: 原数组每个元素执行回调函数的结果组成的新数组</p>
+<h4 id="arr-includes"><a href="#arr-includes" class="headerlink" title="arr.includes()"></a>arr.includes()</h4><p>返回值: boolean</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].includes(<span class="number">2</span>);     <span class="comment">// true</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].includes(<span class="number">4</span>);     <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="arr-indexOf-searchElement-fromIndex"><a href="#arr-indexOf-searchElement-fromIndex" class="headerlink" title="arr.indexOf(searchElement[, fromIndex])"></a>arr.indexOf(searchElement[, fromIndex])</h4><ul>
+<li><p>fromIndex(可选)</p>
+<ul>
+<li>指定开始查找的位置</li>
+</ul>
+</li>
+</ul>
+<p>返回值: 查找元素的索引下标 若找不到则为-1</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array = [<span class="number">2</span>, <span class="number">5</span>, <span class="number">9</span>];</span><br><span class="line">array.indexOf(<span class="number">2</span>);     <span class="comment">// 0</span></span><br><span class="line">array.indexOf(<span class="number">7</span>);     <span class="comment">// -1</span></span><br><span class="line">array.indexOf(<span class="number">9</span>, <span class="number">2</span>);  <span class="comment">// 2</span></span><br><span class="line">array.indexOf(<span class="number">2</span>, -<span class="number">1</span>); <span class="comment">// -1</span></span><br><span class="line">array.indexOf(<span class="number">2</span>, -<span class="number">3</span>); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="arr-join"><a href="#arr-join" class="headerlink" title="arr.join()"></a>arr.join()</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [<span class="string">&#x27;Wind&#x27;</span>, <span class="string">&#x27;Rain&#x27;</span>, <span class="string">&#x27;Fire&#x27;</span>];</span><br><span class="line"><span class="keyword">var</span> myVar1 = a.join();      <span class="comment">// myVar1的值变为&quot;Wind,Rain,Fire&quot;</span></span><br><span class="line"><span class="keyword">var</span> myVar2 = a.join(<span class="string">&#x27;, &#x27;</span>);  <span class="comment">// myVar2的值变为&quot;Wind, Rain, Fire&quot;</span></span><br><span class="line"><span class="keyword">var</span> myVar3 = a.join(<span class="string">&#x27; + &#x27;</span>); <span class="comment">// myVar3的值变为&quot;Wind + Rain + Fire&quot;</span></span><br><span class="line"><span class="keyword">var</span> myVar4 = a.join(<span class="string">&#x27;&#x27;</span>);    <span class="comment">// myVar4的值变为&quot;WindRainFire&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="arr-reduce-callback-accumulator-currentValue-index-array-initialValue"><a href="#arr-reduce-callback-accumulator-currentValue-index-array-initialValue" class="headerlink" title="arr.reduce(callback(accumulator, currentValue[, index[, array]])[, initialValue])"></a>arr.reduce(callback(accumulator, currentValue[, index[, array]])[, initialValue])</h4><ul>
+<li><p>accumulator: 累加器 即函数上一次调用的返回值。</p>
+<p>第一次的时候为 initialValue || arr[0]</p>
+</li>
+<li><p>currentValue: 数组中函数正在处理的的值。</p>
+<p>第一次的时候 initialValue || arr[1]</p>
+</li>
+<li><p>currentIndex: (可选)数据中正在处理的元素索引</p>
+<p>如果提供了 initialValue 从 0 开始 否则从 1 开始</p>
+</li>
+<li><p>array: (可选)调用 reduce 的数组</p>
+</li>
+<li><p>initialValue: (可选)累加器的初始值。没有时 累加器第一次的值为 currentValue</p>
+<p>注意: 在对没有设置初始值的空数组调用 reduce 方法时会报错。</p>
+</li>
+</ul>
+<p>返回值: 函数累计处理的结果</p>
+<p>为了更直观的感受 我们来看一个例子</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//有初始值</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].reduce(<span class="function"><span class="keyword">function</span> (<span class="params">accumulator, currentValue, currentIndex, array</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> accumulator + currentValue</span><br><span class="line">&#125;, <span class="number">10</span>) <span class="comment">// 20</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>callback</th>
+<th>accumulator</th>
+<th>currentValue</th>
+<th>currentIndex</th>
+<th>array</th>
+<th>return value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>first call</td>
+<td>10(初始值)</td>
+<td>1(数组第一个元素)</td>
+<td>0(有初始值为 0)</td>
+<td>[1, 2, 3, 4]</td>
+<td>11</td>
+</tr>
+<tr>
+<td>second call</td>
+<td>11</td>
+<td>2</td>
+<td>1</td>
+<td>[1, 2, 3, 4]</td>
+<td>13</td>
+</tr>
+<tr>
+<td>third call</td>
+<td>13</td>
+<td>3</td>
+<td>2</td>
+<td>[1, 2, 3, 4]</td>
+<td>16</td>
+</tr>
+<tr>
+<td>fourth call</td>
+<td>16</td>
+<td>4</td>
+<td>3</td>
+<td>[1, 2, 3, 4]</td>
+<td>20</td>
+</tr>
+</tbody></table>
+<h4 id="arr-reverse"><a href="#arr-reverse" class="headerlink" title="arr.reverse()"></a>arr.reverse()</h4><p>返回值: 颠倒后的数组(会直接修改原数组)</p>
+<h4 id="arr-slice-begin-end"><a href="#arr-slice-begin-end" class="headerlink" title="arr.slice([begin[, end]])"></a>arr.slice([begin[, end]])</h4><p>若省略 则默认从0开始</p>
+<p>返回值: 一个新的数组实例(不会修改原数组)</p>
+<p>功能: 切割数组/浅拷贝/转化为真正的数组</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="arr-sort-compareFunction"><a href="#arr-sort-compareFunction" class="headerlink" title="arr.sort([compareFunction])"></a>arr.sort([compareFunction])</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> numbers = [<span class="number">4</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">3</span>]; </span><br><span class="line">numbers.sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b); <span class="comment">// 升序 </span></span><br><span class="line">numbers.sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> b - a); <span class="comment">// 降序 </span></span><br></pre></td></tr></table></figure>
+
+<p>返回值: 排序后的数组(修改原数组)</p>
+<h4 id="array-splice-start-deleteCount-item1-item2-…"><a href="#array-splice-start-deleteCount-item1-item2-…" class="headerlink" title="array.splice(start[, deleteCount[, item1[, item2[, …]]]])"></a>array.splice(start[, deleteCount[, item1[, item2[, …]]]])</h4><ul>
+<li><p>deleteCount(可选)</p>
+<p>整数，表示要移除的数组元素的个数。</p>
+<ul>
+<li><p><code>&gt;0 删除元素</code></p>
+</li>
+<li><p><code>&lt;0 添加元素</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="增加-删除"><a href="#增加-删除" class="headerlink" title="增加/删除"></a>增加/删除</h4><ul>
+<li><p>pop() 删除最后一个元素 返回值为被删除元素</p>
+</li>
+<li><p>push() 在数组最后添加一个元素 返回值为新数组的长度</p>
+</li>
+<li><p>shift() 删除第一个元素 返回值为被删除的元素</p>
+</li>
+<li><p>unshift() 在数组开头添加一个元素 返回值为新数组的长度</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><img src="https://gitee.com/LuckyChou/blog-images/raw/master/js/data-type/array.png" />
+
+<h2 id="数组排序"><a href="#数组排序" class="headerlink" title="数组排序"></a>数组排序</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 升序</span></span><br><span class="line">arr.sort(<span class="function">(<span class="params">x,y</span>) =&gt;</span> x-y)</span><br><span class="line"><span class="comment">// 降序</span></span><br><span class="line">arr.sort(<span class="function">(<span class="params">x,y</span>) =&gt;</span> y-x)</span><br></pre></td></tr></table></figure>
+
+<h2 id="数组反转"><a href="#数组反转" class="headerlink" title="数组反转"></a>数组反转</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实现一</span></span><br><span class="line">arr.reverse()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现二</span></span><br><span class="line">arr.reduce(<span class="function">(<span class="params">prev, curr</span>) =&gt;</span> &#123;</span><br><span class="line">    prev.unshift(curr);</span><br><span class="line">    <span class="keyword">return</span> prev;</span><br><span class="line">  &#125;, [])</span><br></pre></td></tr></table></figure>
+
+<h2 id="数组去重"><a href="#数组去重" class="headerlink" title="数组去重"></a>数组去重</h2><h3 id="实现一"><a href="#实现一" class="headerlink" title="实现一"></a>实现一</h3><p>用 ES6 Set 的特性 没有重复的元素</p>
+<h3 id="实现二"><a href="#实现二" class="headerlink" title="实现二"></a>实现二</h3><p>先将数组排序 然后比较相邻元素 如果相同 就移到下一个元素</p>
+<h3 id="实现三"><a href="#实现三" class="headerlink" title="实现三"></a>实现三</h3><p>双重for循环 </p>
+<h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><p>具体代码如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getArr</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> timer = <span class="number">10000</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; timer; i++) &#123;</span><br><span class="line">    arr[i] = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">100</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr1 = []</span><br><span class="line"><span class="keyword">let</span> arr2 = []</span><br><span class="line"><span class="keyword">let</span> arr3 = []</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成了 3个 数组长度为timer的数组</span></span><br><span class="line">arr1 = getArr(arr1)</span><br><span class="line">arr2 = getArr(arr2)</span><br><span class="line">arr3 = getArr(arr3)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// case 1</span></span><br><span class="line"><span class="built_in">console</span>.time(<span class="string">&#x27;case1&#x27;</span>)</span><br><span class="line">arr = [...new <span class="built_in">Set</span>(arr1)]</span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">&#x27;case1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// case 2</span></span><br><span class="line"><span class="built_in">console</span>.time(<span class="string">&#x27;case2&#x27;</span>)</span><br><span class="line">arr2 = arr2.sort(<span class="function">(<span class="params">x, y</span>) =&gt;</span> x - y)</span><br><span class="line"><span class="keyword">const</span> res2 = []</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr2.length; i++) &#123;</span><br><span class="line">  <span class="keyword">if</span> (arr2[i] !== arr2[i + <span class="number">1</span>]) &#123;</span><br><span class="line">    res2.push(arr2[i])</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">&#x27;case2&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// case3</span></span><br><span class="line"><span class="built_in">console</span>.time(<span class="string">&#x27;case3&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> res3 = []</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr3.length; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = i + <span class="number">1</span>; j &lt; arr3.length; j++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (arr3[i] == arr3[j]) &#123;</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (j == arr3.length - <span class="number">1</span>) &#123;</span><br><span class="line">      res3.push(arr3[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">&#x27;case3&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// output</span></span><br><span class="line"><span class="comment">// case1: 0.467ms</span></span><br><span class="line"><span class="comment">// case2: 5.254ms</span></span><br><span class="line"><span class="comment">// case3: 11.034ms</span></span><br></pre></td></tr></table></figure>
+
+<p>可见 利用ES6的Set是效率最高的一种方法</p>
+<h2 id="数组乱序"><a href="#数组乱序" class="headerlink" title="数组乱序"></a>数组乱序</h2><h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>取两个数组长度范围内的下标  交换位置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">random</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> timer = <span class="number">1000</span></span><br><span class="line">  <span class="keyword">var</span> x, y, temp</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; timer; i++) &#123;</span><br><span class="line">    x = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * arr.length)</span><br><span class="line">    y = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * arr.length)</span><br><span class="line">    temp = arr[x]</span><br><span class="line">    arr[x] = arr[y]</span><br><span class="line">    arr[y] = temp</span><br><span class="line">    <span class="comment">// ES6 写法</span></span><br><span class="line">    <span class="comment">// ;[arr[x], arr[y]] = [arr[y], arr[x]]</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="数组扁平化"><a href="#数组扁平化" class="headerlink" title="数组扁平化"></a>数组扁平化</h2><h3 id="实现一-1"><a href="#实现一-1" class="headerlink" title="实现一"></a>实现一</h3><p>调用 <code>Array.prototype.flat</code></p>
+<h3 id="实现二-1"><a href="#实现二-1" class="headerlink" title="实现二"></a>实现二</h3><p>如果都是数字 可以用 toString 方法 转化为字符串 再用 split 切割</p>
+<h3 id="实现三-1"><a href="#实现三-1" class="headerlink" title="实现三"></a>实现三</h3><p>递归调用 </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"><span class="keyword">var</span> res = []</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flat</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// case 1</span></span><br><span class="line">  <span class="comment">// return arr.flat()</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// case 2</span></span><br><span class="line">  <span class="comment">// return arr</span></span><br><span class="line">  <span class="comment">//   .toString()</span></span><br><span class="line">  <span class="comment">//   .split(&#x27;,&#x27;)</span></span><br><span class="line">  <span class="comment">//   .map((item) =&gt; +item)</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// case 3</span></span><br><span class="line">  <span class="comment">// for (var i = 0; i &lt; arr.length; i++) &#123;</span></span><br><span class="line">  <span class="comment">//   if (arr[i] instanceof Array) &#123;</span></span><br><span class="line">  <span class="comment">//     flat(arr[i])</span></span><br><span class="line">  <span class="comment">//   &#125; else &#123;</span></span><br><span class="line">  <span class="comment">//     res.push(arr[i])</span></span><br><span class="line">  <span class="comment">//   &#125;</span></span><br><span class="line">  <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// return res</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/FE/Interview/Security/" rel="prev" title="应知应会 安全">
+      <i class="fa fa-chevron-left"></i> 应知应会 安全
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/FE/JS/bind-call-apply/" rel="next" title="JavaScript 手写bind call apply">
+      JavaScript 手写bind call apply <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#length-%E5%B1%9E%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">length 属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#in"><span class="nav-number">2.</span> <span class="nav-text">in</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#for%E2%80%A6%E2%80%A6in"><span class="nav-number">2.1.</span> <span class="nav-text">for……in</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#delete"><span class="nav-number">3.</span> <span class="nav-text">delete</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%AA%E6%95%B0%E7%BB%84"><span class="nav-number">4.</span> <span class="nav-text">伪数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84API"><span class="nav-number">5.</span> <span class="nav-text">数组API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95"><span class="nav-number">5.1.</span> <span class="nav-text">静态方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Array-from-arrayLike-mapFn-thisArg"><span class="nav-number">5.1.1.</span> <span class="nav-text">Array.from(arrayLike[, mapFn[, thisArg]])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Array-isArray"><span class="nav-number">5.1.2.</span> <span class="nav-text">Array.isArray()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Array-of-element0-element1-%E2%80%A6-elementN"><span class="nav-number">5.1.3.</span> <span class="nav-text">Array.of(element0[, element1[, …[, elementN]]])</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">成员方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-concat"><span class="nav-number">5.2.1.</span> <span class="nav-text">arr.concat()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-every-callback-element-index-array-thisArg"><span class="nav-number">5.2.2.</span> <span class="nav-text">arr.every(callback(element[, index[, array]])[, thisArg])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-some"><span class="nav-number">5.2.3.</span> <span class="nav-text">arr.some()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-fill"><span class="nav-number">5.2.4.</span> <span class="nav-text">arr.fill()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-filter-callback-element-index-array-thisArg"><span class="nav-number">5.2.5.</span> <span class="nav-text">arr.filter(callback(element[, index[, array]])[, thisArg])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-find-callback-thisArg"><span class="nav-number">5.2.6.</span> <span class="nav-text">arr.find(callback[, thisArg])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-findIndex"><span class="nav-number">5.2.7.</span> <span class="nav-text">arr.findIndex()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-flat-depth"><span class="nav-number">5.2.8.</span> <span class="nav-text">arr.flat([depth])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-flatMap"><span class="nav-number">5.2.9.</span> <span class="nav-text">arr.flatMap()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-forEach-callback-currentValue-index-array-thisArg"><span class="nav-number">5.2.10.</span> <span class="nav-text">arr.forEach(callback(currentValue [, index [, array]])[, thisArg])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-map"><span class="nav-number">5.2.11.</span> <span class="nav-text">arr.map()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-includes"><span class="nav-number">5.2.12.</span> <span class="nav-text">arr.includes()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-indexOf-searchElement-fromIndex"><span class="nav-number">5.2.13.</span> <span class="nav-text">arr.indexOf(searchElement[, fromIndex])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-join"><span class="nav-number">5.2.14.</span> <span class="nav-text">arr.join()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-reduce-callback-accumulator-currentValue-index-array-initialValue"><span class="nav-number">5.2.15.</span> <span class="nav-text">arr.reduce(callback(accumulator, currentValue[, index[, array]])[, initialValue])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-reverse"><span class="nav-number">5.2.16.</span> <span class="nav-text">arr.reverse()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-slice-begin-end"><span class="nav-number">5.2.17.</span> <span class="nav-text">arr.slice([begin[, end]])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arr-sort-compareFunction"><span class="nav-number">5.2.18.</span> <span class="nav-text">arr.sort([compareFunction])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#array-splice-start-deleteCount-item1-item2-%E2%80%A6"><span class="nav-number">5.2.19.</span> <span class="nav-text">array.splice(start[, deleteCount[, item1[, item2[, …]]]])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0-%E5%88%A0%E9%99%A4"><span class="nav-number">5.2.20.</span> <span class="nav-text">增加&#x2F;删除</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E6%8E%92%E5%BA%8F"><span class="nav-number">7.</span> <span class="nav-text">数组排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%8F%8D%E8%BD%AC"><span class="nav-number">8.</span> <span class="nav-text">数组反转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%8E%BB%E9%87%8D"><span class="nav-number">9.</span> <span class="nav-text">数组去重</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%80"><span class="nav-number">9.1.</span> <span class="nav-text">实现一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%BA%8C"><span class="nav-number">9.2.</span> <span class="nav-text">实现二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%89"><span class="nav-number">9.3.</span> <span class="nav-text">实现三</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E8%BE%83"><span class="nav-number">9.4.</span> <span class="nav-text">比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E4%B9%B1%E5%BA%8F"><span class="nav-number">10.</span> <span class="nav-text">数组乱序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">10.1.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E6%89%81%E5%B9%B3%E5%8C%96"><span class="nav-number">11.</span> <span class="nav-text">数组扁平化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%80-1"><span class="nav-number">11.1.</span> <span class="nav-text">实现一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%BA%8C-1"><span class="nav-number">11.2.</span> <span class="nav-text">实现二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%89-1"><span class="nav-number">11.3.</span> <span class="nav-text">实现三</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuckyChou"
+      src="https://gitee.com/LuckyChou/blog-images/raw/master/bg-images/home.gif">
+  <p class="site-author-name" itemprop="name">LuckyChou</p>
+  <div class="site-description" itemprop="description">走过清澈的往日，一如扑水的少年</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">72</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LuckyChou710" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;LuckyChou710" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:944268618@qq.com" title="E-Mail → mailto:944268618@qq.com" rel="noopener" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.bookstack.cn/" title="https:&#x2F;&#x2F;www.bookstack.cn&#x2F;" rel="noopener" target="_blank">书栈网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zh.javascript.info/" title="https:&#x2F;&#x2F;zh.javascript.info&#x2F;" rel="noopener" target="_blank">现代JavaScript教程</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.poetries.top/FE-Interview-Questions/" title="https:&#x2F;&#x2F;blog.poetries.top&#x2F;FE-Interview-Questions&#x2F;" rel="noopener" target="_blank">前端进阶之路</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/axuebin/articles/issues/39" title="https:&#x2F;&#x2F;github.com&#x2F;axuebin&#x2F;articles&#x2F;issues&#x2F;39" rel="noopener" target="_blank">精选文章</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckyChou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">199k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">3:01</span>
+
+  
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"2ygSXPofSYCVRrAMMsunHkV4-gzGzoHsz","app_key":"W2R9pWAnE5aav2utFddVcbzI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '2ygSXPofSYCVRrAMMsunHkV4-gzGzoHsz',
+      appKey     : 'W2R9pWAnE5aav2utFddVcbzI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
